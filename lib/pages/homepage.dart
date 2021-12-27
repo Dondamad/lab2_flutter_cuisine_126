@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lab2cuisine/widget/bullet_widget.dart';
 
 class MyHomepage extends StatelessWidget {
   const MyHomepage({Key? key}) : super(key: key);
@@ -21,7 +24,7 @@ class MyHomepage extends StatelessWidget {
                   'วิธีทำ “ออมเลตชีส” เมนูไข่เนื้อนุ่ม ชีสเยิ้ม อิ่มท้องง่าย ๆ ในยามเช้า!',
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
-                    fontSize: 20,
+                    fontSize: 22,
                   ),
                 ),
                 Text(
@@ -83,25 +86,54 @@ class MyHomepage extends StatelessWidget {
           ),
           introduction(),
           ingredients(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-            child: TitleDivider(title: 'วิธีทำ'),
+          cookingMethod(),
+          _cookingStep(
+            step: 1,
+            strings: [
+              'วิธีทำออมเลตเริ่มจากตอกไข่ใส่ชามผสม ใส่นมลงไป ปรุงรสด้วยเกลือ พริกไทย แล้วตีให้เข้ากัน'
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'STEP 1 : ตีไข่',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                listitem()
-              ],
-            ),
+          _cookingStep(
+            step: 2,
+            strings: [
+              'ตั้งกระทะ ใช้ไฟอ่อน ใส่เนยลงไป กระจายเนยให้ทั่วกระทะ',
+              'เทไข่ทีตีไว้ลงไป รอให้ไข่ด้านล่างสุกเล็กน้อย แล้วใช้พายคนไข่ให้ทั่ว',
+              'เมื่อไข่เริ่มเซ็ตตัว ดันไข่ไปสุดฝั่งกระทะ จัดให้เป็นทรงรักบี้ แล้วโรยชีสลงไปตรงกลาง',
+              'กลับด้านไข่ให้ห่อชีสเอาไว้ รอจนสุกทุกด้าน',
+            ],
           ),
+          _cookingStep(
+            step: 3,
+            strings: [
+              'ตักใส่จานจัดเสิร์ฟ กินคู่กับผักสลัด แฮม เบคอน หรือไส้กรอก ตามใจชอบ'
+            ],
+          ),
+          finalSection(),
           SizedBox(
             height: 10,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding cookingMethod() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+      child: TitleDivider(title: 'วิธีทำ'),
+    );
+  }
+
+  Padding finalSection() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+      child: Column(
+        children: [
+          Image.asset('images/omlet_final.jpg'),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Text(
+                'เรียบร้อยไปแล้วสำหรับเมนูไข่อย่าง “ออมเลตชีส” ที่เหมาะกับอาหารเช้าวันสบาย ๆ เพื่อนสามารถใส่เนื้อสัตว์เพิ่มเติมได้ตามชอบเลย ถ้าเบื่อไข่เจียวแบบเดิม ๆ เอาก็เชิญส่องวิธีทำออมเลตไว้เสิร์ฟไปขึ้นโต๊ะ หรือกินชิลล์ ๆ ได้เลยจ้า'),
           ),
         ],
       ),
@@ -124,7 +156,10 @@ class MyHomepage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10),
-          Text('เชฟดอน • วันที่ 25 ธ.ค. 2564'),
+          Text(
+            'เชฟดอน • วันที่ 25 ธ.ค. 2564',
+            style: TextStyle(fontSize: 16),
+          ),
         ],
       ),
     );
@@ -177,23 +212,30 @@ class MyHomepage extends StatelessWidget {
   }
 }
 
-class listitem extends StatelessWidget {
-  const listitem({
+class _cookingStep extends StatelessWidget {
+  final int step;
+  final List<String> strings;
+
+  const _cookingStep({
     Key? key,
+    required this.step,
+    required this.strings,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Icon(
-          Icons.circle,
-          color: Colors.black,
-          size: 10,
-        ),
-        Text(
-            'วิธีทำออมเลตเริ่มจากตอกไข่ใส่ชามผสม ใส่นมลงไป ปรุงรสด้วยเกลือ พริกไทย แล้วตีให้เข้ากัน')
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'STEP $step',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          BulletList(strings),
+        ],
+      ),
     );
   }
 }
@@ -223,7 +265,7 @@ class TitleDivider extends StatelessWidget {
           title,
           style: TextStyle(
             fontWeight: FontWeight.w700,
-            fontSize: 18,
+            fontSize: 20,
           ),
         ),
         Expanded(
